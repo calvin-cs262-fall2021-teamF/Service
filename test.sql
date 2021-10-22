@@ -1,7 +1,12 @@
 -- CREATE DATABASE test;
 
-CREATE TABLE test_table (ID int, name varchar(10));
+CREATE TABLE user (
+    ID int PRIMARY KEY, 
+    name varchar(20), 
+    email varchar(30),
+    password varchar(100)
+);
 
-INSERT INTO test_table (1, 'Jon');
+INSERT INTO user (1, 'Jon', 'jondoe@gmail.com', 'password');
 
-SELECT * FROM test_table;
+SELECT * FROM user;
