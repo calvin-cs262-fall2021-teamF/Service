@@ -38,11 +38,6 @@ router.use(express.json());
 
 router.get("/", readHelloMessage);
 router.get("/users", readUsers);
-router.get("/players/:id", readPlayer);
-router.put("/players/:id", updatePlayer);
-router.post('/players', createPlayer);
-router.delete('/players/:id', deletePlayer);
-router.get("/game/:id/winner", getWinner);
 
 app.use(router);
 app.use(errorHandler);
@@ -66,7 +61,7 @@ function returnDataOr404(res, data) {
 }
 
 function readHelloMessage(req, res) {
-    res.send('Hello, CS 262 Monopoly service!');
+    res.send('Hello, welcome to ToothFlex service!');
 }
 
 function readUsers(req, res, next) {
@@ -77,55 +72,4 @@ function readUsers(req, res, next) {
         .catch(err => {
             next(err);
         })
-}
-
-function readPlayer(req, res, next) {
-    db.oneOrNone('SELECT * FROM Player WHERE id=${id}', req.params)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
-function updatePlayer(req, res, next) {
-    db.oneOrNone('UPDATE Player SET email=${body.email}, name=${body.name} WHERE id=${params.id} RETURNING id', req)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
-function createPlayer(req, res, next) {
-    db.one('INSERT INTO Player(email, name) VALUES (${email}, ${name}) RETURNING id', req.body)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
-function deletePlayer(req, res, next) {
-    db.oneOrNone('DELETE FROM Player WHERE id=${id} RETURNING id', req.params)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
-function getWinner(req, res, next) {
-    db.one(
-        'select Player.name from Player, PlayerGame where PlayerGame.gameID = ${ id } and Player.ID = PlayerGame.PlayerID order by score DESC limit 1', req.params)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
 }
