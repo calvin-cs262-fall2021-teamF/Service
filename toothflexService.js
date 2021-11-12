@@ -37,7 +37,7 @@ const router = express.Router();
 router.use(express.json());
 
 router.get("/", readHelloMessage);
-router.get("/players", readPlayers);
+router.get("/users", readUsers);
 router.get("/players/:id", readPlayer);
 router.put("/players/:id", updatePlayer);
 router.post('/players', createPlayer);
@@ -69,8 +69,8 @@ function readHelloMessage(req, res) {
     res.send('Hello, CS 262 Monopoly service!');
 }
 
-function readPlayers(req, res, next) {
-    db.many("SELECT * FROM Player")
+function readUsers(req, res, next) {
+    db.many("SELECT * FROM User")
         .then(data => {
             res.send(data);
         })
