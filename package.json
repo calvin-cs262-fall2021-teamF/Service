@@ -1,0 +1,19 @@
+{
+  "name": "toothflex-service",
+  "version": "1.0.0",
+  "description": "CS 262 Webservice",
+  "main": "toothflexService.js",
+  "author": "peterpeng",
+  "license": "ISC",
+  "engines": {
+    "node": "12.x"
+  },
+  "scripts": {
+    "start": "node toothflexService.js",
+    "start-direct": "node toothflexDirect.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg-promise": "^10.7.1"
+  }
+}

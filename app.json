@@ -1,0 +1,6 @@
+{
+  "name": "Start on Heroku: toothflexService.js",
+  "description": "Data-based webservice for ToothFlex",
+  "repository": "https://github.com/calvin-cs262-fall2021-teamF/toothflex-service",
+  "image": "heroku/nodejs"
+}
