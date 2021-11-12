@@ -38,6 +38,8 @@ router.use(express.json());
 
 router.get("/", readHelloMessage);
 router.get("/users", readUsers);
+router.get("/users/:email/:password", authenticateUser);
+
 
 app.use(router);
 app.use(errorHandler);
@@ -68,6 +70,16 @@ function readUsers(req, res, next) {
     db.many("SELECT * FROM Users")
         .then(data => {
             res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        })
+}
+
+function authenticateUser(req, res, next) {
+    db.many("SELECT * FROM Users WHERE email=${email} AND password=${password}", req.params)
+        .then(data => {
+            returnDataOr404(res, data);
         })
         .catch(err => {
             next(err);
