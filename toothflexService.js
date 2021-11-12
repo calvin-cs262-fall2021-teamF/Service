@@ -38,7 +38,7 @@ router.use(express.json());
 
 router.get("/", readHelloMessage);
 router.get("/users", readUsers);
-router.post("/auth/", authenticateUser);
+router.get("/auth/:email/:password", authenticateUser);
 
 
 app.use(router);
