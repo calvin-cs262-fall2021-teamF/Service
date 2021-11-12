@@ -77,7 +77,7 @@ function readUsers(req, res, next) {
 }
 
 function authenticateUser(req, res, next) {
-    db.one("SELECT * FROM Users WHERE email=${email} AND password=${password}", req.params)
+    db.one("SELECT * FROM Users WHERE email=${email} AND password=${password}", req.body)
         .then(data => {
             returnDataOr404(res, data);
         })
