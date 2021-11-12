@@ -38,7 +38,7 @@ router.use(express.json());
 
 router.get("/", readHelloMessage);
 router.get("/users", readUsers);
-router.get("/users", authenticateUser);
+router.get("/auth", authenticateUser);
 
 
 app.use(router);
