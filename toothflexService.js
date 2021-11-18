@@ -38,7 +38,7 @@ router.use(express.json());
 
 router.get("/", readHelloMessage);
 router.get("/users", readUsers);
-router.get("/users", readUser);
+router.get("/users/:id", readUser);
 router.get("/auth/:email/:password", authenticateUser);
 router.put("/users/:id/:freq", updateFreqGoal);
 
