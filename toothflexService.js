@@ -38,6 +38,7 @@ router.use(express.json());
 
 router.get("/", readHelloMessage);
 router.get("/users", readUsers);
+router.get("/users", readUser);
 router.get("/auth/:email/:password", authenticateUser);
 router.put("/users/:id/:freq", updateFreqGoal);
 
@@ -70,6 +71,17 @@ function readUsers(req, res, next) {
     db.many("SELECT * FROM Users")
         .then(data => {
             res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        })
+}
+
+
+function readUser(req, res, next) {
+    db.many("SELECT * FROM Users WHERE id=${id}", req.params)
+        .then(data => {
+            returnDataOr404(res, data);
         })
         .catch(err => {
             next(err);
