@@ -79,7 +79,7 @@ function readUsers(req, res, next) {
 
 
 function readUser(req, res, next) {
-    db.many("SELECT * FROM Users WHERE id=${id}", req.params)
+    db.one("SELECT * FROM Users WHERE id=${id}", req.params)
         .then(data => {
             returnDataOr404(res, data);
         })
