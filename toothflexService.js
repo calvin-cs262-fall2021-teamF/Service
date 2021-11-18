@@ -40,7 +40,8 @@ router.get("/", readHelloMessage);
 router.get("/users", readUsers);
 router.get("/users/:id", readUser);
 router.get("/auth/:email/:password", authenticateUser);
-router.put("/users/:id/:freq", updateFreqGoal);
+router.put("/users/:id/freq/:freq", updateFreqGoal);
+router.put("/users/:id/time/:time", updateTimeGoal);
 
 app.use(router);
 app.use(errorHandler);
@@ -100,6 +101,16 @@ function authenticateUser(req, res, next) {
 
 function updateFreqGoal(req, res, next) {
     db.oneOrNone('UPDATE Users SET freqGoal=${freq} WHERE id=${id} RETURNING id', req.params)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+function updateTimeGoal(req, res, next) {
+    db.oneOrNone('UPDATE Users SET timeGoal=${time} WHERE id=${id} RETURNING id', req.params)
         .then(data => {
             returnDataOr404(res, data);
         })
