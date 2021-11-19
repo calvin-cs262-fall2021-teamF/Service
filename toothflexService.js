@@ -90,7 +90,7 @@ function readUser(req, res, next) {
 }
 
 function readBrushLogs(req, res, next) {
-    db.one("SELECT * FROM Logs", req.params)
+    db.many("SELECT * FROM Logs", req.params)
         .then(data => {
             returnDataOr404(res, data);
         })
