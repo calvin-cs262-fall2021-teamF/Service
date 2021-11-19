@@ -40,6 +40,7 @@ router.get("/", readHelloMessage);
 router.get("/users", readUsers);
 router.get("/users/:id", readUser);
 router.get("/auth/:email/:password", authenticateUser);
+router.get("/brushLogs", readBrushLogs);
 router.put("/users/:id/freq/:freq", updateFreqGoal);
 router.put("/users/:id/time/:time", updateTimeGoal);
 
@@ -78,9 +79,18 @@ function readUsers(req, res, next) {
         })
 }
 
-
 function readUser(req, res, next) {
     db.one("SELECT * FROM Users WHERE id=${id}", req.params)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        })
+}
+
+function readBrushLogs(req, res, next) {
+    db.one("SELECT * FROM Logs", req.params)
         .then(data => {
             returnDataOr404(res, data);
         })
