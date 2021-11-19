@@ -43,6 +43,7 @@ router.get("/auth/:email/:password", authenticateUser);
 router.get("/brushLogs", readBrushLogs);
 router.put("/users/:id/freq/:freq", updateFreqGoal);
 router.put("/users/:id/time/:time", updateTimeGoal);
+// router.put("brushLogs/:id", addNewLog);
 
 app.use(router);
 app.use(errorHandler);
@@ -121,6 +122,16 @@ function updateFreqGoal(req, res, next) {
 
 function updateTimeGoal(req, res, next) {
     db.oneOrNone('UPDATE Users SET timeGoal=${time} WHERE id=${id} RETURNING id', req.params)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+function addNewLog(req, res, next) {
+    db.oneOrNone('INSERT INTO Logs (ID, userID, brushDate, duration) VALUES (?, ?, ?)', req.params)
         .then(data => {
             returnDataOr404(res, data);
         })
