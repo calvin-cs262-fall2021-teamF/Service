@@ -11,11 +11,10 @@
  * In particular, we don't use JS template strings because it doesn't filter
  * client-supplied values properly.
  *
- * TODO: Consider using Prepared Statements.
- *      https://vitaly-t.github.io/pg-promise/PreparedStatement.html
  *
  * @author: kvlinden
- * @date: Summer, 2020
+ * @edited: Peter Peng, Sean Ebenmelu
+ * @date: Fall, 2021
  */
 
 // Set up the database connection.
@@ -37,9 +36,11 @@ const router = express.Router();
 router.use(express.json());
 
 router.get("/", readHelloMessage);
+router.get("/auth/:email/:password", authenticateUser);
+router.get("/brushLogs", readBrushLogs);
+router.post("brushLogs/", addNewLog);
 router.get("/users", readUsers);
 router.get("/users/:id", readUser);
-router.get("/auth/:email/:password", authenticateUser);
 router.put("/users/:id/freq/:freq", updateFreqGoal);
 router.put("/users/:id/time/:time", updateTimeGoal);
 
@@ -78,9 +79,18 @@ function readUsers(req, res, next) {
         })
 }
 
-
 function readUser(req, res, next) {
     db.one("SELECT * FROM Users WHERE id=${id}", req.params)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        })
+}
+
+function readBrushLogs(req, res, next) {
+    db.many("SELECT * FROM Logs", req.params)
         .then(data => {
             returnDataOr404(res, data);
         })
@@ -113,6 +123,19 @@ function updateTimeGoal(req, res, next) {
     db.oneOrNone('UPDATE Users SET timeGoal=${time} WHERE id=${id} RETURNING id', req.params)
         .then(data => {
             returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+function addNewLog(req, res, next) {
+    db.one(
+      'INSERT INTO Logs (ID, userID, brushDate, duration) VALUES (${ID}, ${userID}, ${brushDate}, ${duration}) RETURNING *'
+      , req.body
+    )
+        .then(data => {
+            res.send(data);
         })
         .catch(err => {
             next(err);
