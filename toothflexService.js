@@ -48,6 +48,7 @@ router.put("/users/:id/name/:name", updateName);
 router.put("/users/:id/email/:email", updateEmail);
 router.put("/users/:id/password/:password", updatePassword);
 // router.put("brushLogs/:id", addNewLog);
+router.post('/users', createUser);
 
 app.use(router);
 app.use(errorHandler);
@@ -177,6 +178,16 @@ function addNewLog(req, res, next) {
     db.oneOrNone('INSERT INTO Logs (ID, userID, brushDate, duration) VALUES (?, ?, ?)', req.params)
         .then(data => {
             returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+function createUser(req, res, next) {
+    db.one('INSERT INTO Users(email, name) VALUES (${ email }, ${ name }) RETURNING id', req.body)
+        .then(data => {
+            res.send(data);
         })
         .catch(err => {
             next(err);

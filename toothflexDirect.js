@@ -47,6 +47,7 @@ router.put("/users/:id/username/:username", updateUsername);
 router.put("/users/:id/name/:name", updateName);
 router.put("/users/:id/email/:email", updateEmail);
 router.put("/users/:id/password/:password", updatePassword);
+router.post('/users', createUser);
 // router.put("brushLogs/:id", addNewLog);
 
 app.use(router);
@@ -175,6 +176,16 @@ function updateEmail(req, res, next) {
 
 function updatePassword(req, res, next) {
     db.one('UPDATE Users SET password=${password} WHERE id=${id} RETURNING id', req.params)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+function createUser(req, res, next) {
+    db.one('INSERT INTO Users(email, name) VALUES (${ email }, ${ name }) RETURNING id', req.body)
         .then(data => {
             res.send(data);
         })
