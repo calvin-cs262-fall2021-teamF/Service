@@ -43,6 +43,10 @@ router.get("/auth/:email/:password", authenticateUser);
 router.get("/brushLogs", readBrushLogs);
 router.put("/users/:id/freq/:freq", updateFreqGoal);
 router.put("/users/:id/time/:time", updateTimeGoal);
+router.put("/users/:id/username/:username", updateUsername);
+router.put("/users/:id/name/:name", updateName);
+router.put("/users/:id/email/:email", updateEmail);
+router.put("/users/:id/password/:password", updatePassword);
 // router.put("brushLogs/:id", addNewLog);
 
 app.use(router);
@@ -134,6 +138,45 @@ function addNewLog(req, res, next) {
     db.oneOrNone('INSERT INTO Logs (ID, userID, brushDate, duration) VALUES (?, ?, ?)', req.params)
         .then(data => {
             returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+function updateName(req, res, next) {
+    db.one('UPDATE Users SET name=${name} WHERE id=${id} RETURNING id', req.body)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+function updateUsername(req, res, next) {
+    db.one('UPDATE Users SET username=${username} WHERE id=${id} RETURNING id', req.body)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+function updateEmail(req, res, next) {
+    db.one('UPDATE Users SET email=${email} WHERE id=${id} RETURNING id', req.body)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+function updatePassword(req, res, next) {
+    db.one('UPDATE Users SET password=${password} WHERE id=${id} RETURNING id', req.body)
+        .then(data => {
+            res.send(data);
         })
         .catch(err => {
             next(err);
