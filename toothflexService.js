@@ -42,6 +42,10 @@ router.get("/users/:id", readUser);
 router.get("/auth/:email/:password", authenticateUser);
 router.put("/users/:id/freq/:freq", updateFreqGoal);
 router.put("/users/:id/time/:time", updateTimeGoal);
+router.put("/users/:id/username/:username", updateUsername);
+router.put("/users/:id/name/:name", updateName);
+router.put("/users/:id/email/:email", updateEmail);
+router.put("/users/:id/password/:password", updatePassword);
 
 app.use(router);
 app.use(errorHandler);
@@ -113,6 +117,45 @@ function updateTimeGoal(req, res, next) {
     db.oneOrNone('UPDATE Users SET timeGoal=${time} WHERE id=${id} RETURNING id', req.params)
         .then(data => {
             returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+function updateName(req, res, next) {
+    db.one('UPDATE Users SET name=${name} WHERE id=${id} RETURNING id', req.body)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+function updateUsername(req, res, next) {
+    db.one('UPDATE Users SET username=${username} WHERE id=${id} RETURNING id', req.body)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+function updateEmail(req, res, next) {
+    db.one('UPDATE Users SET email=${email} WHERE id=${id} RETURNING id', req.body)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+function updatePassword(req, res, next) {
+    db.one('UPDATE Users SET password=${password} WHERE id=${id} RETURNING id', req.body)
+        .then(data => {
+            res.send(data);
         })
         .catch(err => {
             next(err);
