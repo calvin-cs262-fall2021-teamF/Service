@@ -145,7 +145,7 @@ function addNewLog(req, res, next) {
 }
 
 function updateName(req, res, next) {
-    db.one('UPDATE Users SET name=${name} WHERE id=${id} RETURNING id', req.body)
+    db.one('UPDATE Users SET name=${name} WHERE id=${id} RETURNING id', req.params)
         .then(data => {
             res.send(data);
         })
@@ -155,7 +155,7 @@ function updateName(req, res, next) {
 }
 
 function updateUsername(req, res, next) {
-    db.one('UPDATE Users SET username=${username} WHERE id=${id} RETURNING id', req.body)
+    db.one('UPDATE Users SET username=${username} WHERE id=${id} RETURNING id', req.params)
         .then(data => {
             res.send(data);
         })
@@ -164,7 +164,7 @@ function updateUsername(req, res, next) {
         });
 }
 function updateEmail(req, res, next) {
-    db.one('UPDATE Users SET email=${email} WHERE id=${id} RETURNING id', req.body)
+    db.one('UPDATE Users SET email=${email} WHERE id=${id} RETURNING id', req.params)
         .then(data => {
             res.send(data);
         })
@@ -174,7 +174,7 @@ function updateEmail(req, res, next) {
 }
 
 function updatePassword(req, res, next) {
-    db.one('UPDATE Users SET password=${password} WHERE id=${id} RETURNING id', req.body)
+    db.one('UPDATE Users SET password=${password} WHERE id=${id} RETURNING id', req.params)
         .then(data => {
             res.send(data);
         })
