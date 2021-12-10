@@ -196,7 +196,7 @@ function createUser(req, res, next) {
 }
 
 function getLogs(req, res, next) {
-    db.one("SELECT * FROM Logs WHERE id=${id}", req.params)
+    db.one("SELECT * FROM Logs WHERE userid=${id}", req.params)
         .then(data => {
             returnDataOr404(res, data);
         })
