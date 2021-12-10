@@ -40,7 +40,6 @@ router.get("/", readHelloMessage);
 router.get("/users", readUsers);
 router.get("/users/:id", readUser);
 router.get("/auth/:email/:password", authenticateUser);
-// router.get("/brushLogs", readBrushLogs);
 router.get("/logs/:id", getLogs);
 router.post("/logs", postLog);
 router.put("/users/:id/freq/:freq", updateFreqGoal);
@@ -49,7 +48,6 @@ router.put("/users/:id/username/:username", updateUsername);
 router.put("/users/:id/name/:name", updateName);
 router.put("/users/:id/email/:email", updateEmail);
 router.put("/users/:id/password/:password", updatePassword);
-// router.put("brushLogs/:id", addNewLog);
 router.post('/users', createUser);
 
 app.use(router);
@@ -89,16 +87,6 @@ function readUsers(req, res, next) {
 
 function readUser(req, res, next) {
     db.one("SELECT * FROM Users WHERE id=${id}", req.params)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        })
-}
-
-function readBrushLogs(req, res, next) {
-    db.many("SELECT * FROM Logs", req.params)
         .then(data => {
             returnDataOr404(res, data);
         })
@@ -176,16 +164,6 @@ function updatePassword(req, res, next) {
         });
 }
 
-function addNewLog(req, res, next) {
-    db.oneOrNone('INSERT INTO Logs (ID, userID, brushDate, duration) VALUES (?, ?, ?)', req.params)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
 function createUser(req, res, next) {
     db.one('INSERT INTO Users(email, name) VALUES (${ email }, ${ name }) RETURNING id', req.body)
         .then(data => {
@@ -207,7 +185,7 @@ function getLogs(req, res, next) {
 }
 
 function postLog(req, res, next) {
-    db.one("INSERT INTO Logs(userId, brushDate, duration) VALUES (${userId}, TIMESTAMP ${brushDate}, ${duration}) RETURNING id", req.body)
+    db.one("INSERT INTO Logs(userId, brushDate, duration) VALUES (${ userId }, TIMESTAMP ${ brushDate }, ${ duration }) RETURNING id", req.body)
         .then(data => {
             returnDataOr404(res, data);
         })
