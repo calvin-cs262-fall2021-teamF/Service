@@ -207,7 +207,7 @@ function getLogs(req, res, next) {
 }
 
 function postLog(req, res, next) {
-    db.one("INSERT INTO Logs(userId, brushDate, duration) VALUES ($(userID), $(brushDate), $(duration))", req.body)
+    db.one("INSERT INTO Logs(userId, brushDate, duration) VALUES ($(userID), $(brushDate), $(duration)) RETURNING id", req.body)
         .then(data => {
             returnDataOr404(res, data);
         })
