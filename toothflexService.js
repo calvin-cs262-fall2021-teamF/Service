@@ -42,7 +42,7 @@ router.get("/users/:id", readUser);
 router.get("/auth/:email/:password", authenticateUser);
 // router.get("/brushLogs", readBrushLogs);
 router.get("/logs/:id", getLogs);
-router.post("/users/:id", postLog);
+router.post("/logs", postLog);
 router.put("/users/:id/freq/:freq", updateFreqGoal);
 router.put("/users/:id/time/:time", updateTimeGoal);
 router.put("/users/:id/username/:username", updateUsername);
