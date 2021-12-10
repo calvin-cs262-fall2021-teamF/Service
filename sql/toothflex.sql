@@ -16,7 +16,7 @@ CREATE TABLE Users(
 CREATE TABLE Logs (
 	ID SERIAL PRIMARY KEY,
 	userId integer REFERENCES Users(ID),
-	brushDate date,
+	brushDate TIMESTAMP,
 	duration integer
 	);
 
@@ -30,8 +30,8 @@ INSERT INTO Users(username, name, email, password, timeGoal, freqGoal) VALUES ('
 INSERT INTO Users(username, name, email, password, timeGoal, freqGoal) VALUES ('b_doe', 'B Doe', 'b_doe@gmail.com', 'bdoe', 80, 3);
 INSERT INTO Users(username, name, email, password, timeGoal, freqGoal) VALUES ('test', 'Test', 'p', 'c', 100, 2);
 
-INSERT INTO Logs(userId, brushDate, duration) VALUES (1, date '2020-03-22', 100);
-INSERT INTO Logs(userId, brushDate, duration) VALUES (2, date '2021-11-01', 90);
-INSERT INTO Logs(userId, brushDate, duration) VALUES (3, date '2021-11-18', 80);
-INSERT INTO Logs(userId, brushDate, duration) VALUES (4, date '2021-11-18', 80);
+INSERT INTO Logs(userId, brushDate, duration) VALUES (1, TIMESTAMP  '2020-03-22 08:03:52', 100);
+INSERT INTO Logs(userId, brushDate, duration) VALUES (2, TIMESTAMP  '2021-11-01 08:03:52', 90);
+INSERT INTO Logs(userId, brushDate, duration) VALUES (3, TIMESTAMP  '2021-11-18 08:03:52', 80);
+INSERT INTO Logs(userId, brushDate, duration) VALUES (4, TIMESTAMP  '2021-11-18 08:03:52', 80);
 
