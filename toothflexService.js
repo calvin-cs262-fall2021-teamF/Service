@@ -40,8 +40,9 @@ router.get("/", readHelloMessage);
 router.get("/users", readUsers);
 router.get("/users/:id", readUser);
 router.get("/auth/:email/:password", authenticateUser);
-router.get("/brushLogs", readBrushLogs);
+// router.get("/brushLogs", readBrushLogs);
 router.get("/logs/:id", getLogs);
+router.post("/users/:id", postLog);
 router.put("/users/:id/freq/:freq", updateFreqGoal);
 router.put("/users/:id/time/:time", updateTimeGoal);
 router.put("/users/:id/username/:username", updateUsername);
@@ -197,6 +198,16 @@ function createUser(req, res, next) {
 
 function getLogs(req, res, next) {
     db.many("SELECT * FROM Logs WHERE userId=${id}", req.params)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        })
+}
+
+function postLog(req, res, next) {
+    db.one("INSERT INTO Logs(userId, brushDate, duration) VALUES ($(userID), $(brushDate), $(duration))", req.body)
         .then(data => {
             returnDataOr404(res, data);
         })
