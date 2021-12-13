@@ -1,21 +1,14 @@
 /**
- * This module implements a REST-inspired webservice for the Monopoly DB.
+ * This module implements a REST-inspired webservice for the ToothFlex DB, 
+ * using the Monopoly DB example by @kvlinden.
+ * 
  * The database is hosted on ElephantSQL.
  *
- * Currently, the service supports the player table only.
+ * Currently, the service supports the Users and Logs tables.
  *
- * To guard against SQL injection attacks, this code uses pg-promise's built-in
- * variable escaping. This prevents a client from issuing this URL:
- *     https://cs262-monopoly-service.herokuapp.com/players/1%3BDELETE%20FROM%20PlayerGame%3BDELETE%20FROM%20Player
- * which would delete records in the PlayerGame and then the Player tables.
- * In particular, we don't use JS template strings because it doesn't filter
- * client-supplied values properly.
  *
- * TODO: Consider using Prepared Statements.
- *      https://vitaly-t.github.io/pg-promise/PreparedStatement.html
- *
- * @author: kvlinden
- * @date: Summer, 2020
+ * @author: Peter Peng, Sean Ebenmelu
+ * @date: Fall, 2021
  */
 
 // Set up the database connection.
@@ -40,7 +33,8 @@ router.get("/", readHelloMessage);
 router.get("/users", readUsers);
 router.get("/users/:id", readUser);
 router.get("/auth/:email/:password", authenticateUser);
-router.get("/brushLogs", readBrushLogs);
+router.get("/logs/:id", getLogs);
+router.post("/logs", postLog);
 router.put("/users/:id/freq/:freq", updateFreqGoal);
 router.put("/users/:id/time/:time", updateTimeGoal);
 router.put("/users/:id/username/:username", updateUsername);
@@ -48,7 +42,6 @@ router.put("/users/:id/name/:name", updateName);
 router.put("/users/:id/email/:email", updateEmail);
 router.put("/users/:id/password/:password", updatePassword);
 router.post('/users', createUser);
-// router.put("brushLogs/:id", addNewLog);
 
 app.use(router);
 app.use(errorHandler);
@@ -95,16 +88,6 @@ function readUser(req, res, next) {
         })
 }
 
-function readBrushLogs(req, res, next) {
-    db.many("SELECT * FROM Logs", req.params)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        })
-}
-
 function authenticateUser(req, res, next) {
     db.one("SELECT * FROM Users WHERE email=${email} AND password=${password}", req.params)
         .then(data => {
@@ -127,16 +110,6 @@ function updateFreqGoal(req, res, next) {
 
 function updateTimeGoal(req, res, next) {
     db.oneOrNone('UPDATE Users SET timeGoal=${time} WHERE id=${id} RETURNING id', req.params)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
-function addNewLog(req, res, next) {
-    db.oneOrNone('INSERT INTO Logs (ID, userID, brushDate, duration) VALUES (?, ?, ?)', req.params)
         .then(data => {
             returnDataOr404(res, data);
         })
@@ -192,4 +165,24 @@ function createUser(req, res, next) {
         .catch(err => {
             next(err);
         });
+}
+
+function getLogs(req, res, next) {
+    db.many("SELECT * FROM Logs WHERE userId=${id}", req.params)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        })
+}
+
+function postLog(req, res, next) {
+    db.one("INSERT INTO Logs(userId, brushDate, duration) VALUES (${ userId }, TIMESTAMP ${ brushDate }, ${ duration }) RETURNING id", req.body)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        })
 }
